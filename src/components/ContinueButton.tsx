@@ -11,5 +11,5 @@ export const ContinueButton = ({ onContinue, title, isLoading }: ContinueButtonP
     <Button size="lg" w="21rem" onClick={onContinue} isLoading={isLoading}>
       {title}
     </Button>
-  </ModalFooter>
+  </ModalFooter> 
 )
