@@ -14,9 +14,10 @@ interface Props {
   isOpen: boolean
   onClose: () => void
   onConfirm: () => void
+  onDownload: () => void
 }
 
-export const SubmitDataAlert = ({ isOpen, onClose, onConfirm }: Props) => {
+export const SubmitDataAlert = ({ isOpen, onClose, onConfirm, onDownload }: Props) => {
   const { allowInvalidSubmit, translations } = useRsi()
   const cancelRef = useRef<HTMLButtonElement | null>(null)
 
@@ -37,9 +38,14 @@ export const SubmitDataAlert = ({ isOpen, onClose, onConfirm }: Props) => {
               {translations.alerts.submitIncomplete.cancelButtonTitle}
             </Button>
             {allowInvalidSubmit && (
-              <Button onClick={onConfirm} ml={3}>
-                {translations.alerts.submitIncomplete.finishButtonTitle}
-              </Button>
+              <>
+                <Button onClick={onConfirm} ml={3}>
+                  {translations.alerts.submitIncomplete.finishButtonTitle}
+                </Button>
+                <Button onClick={onDownload} ml={3}>
+                  {translations.alerts.submitIncomplete.downloadButtonTitle}
+                </Button>
+              </>
             )}
           </AlertDialogFooter>
         </AlertDialogContent>

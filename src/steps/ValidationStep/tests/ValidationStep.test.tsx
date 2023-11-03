@@ -307,7 +307,7 @@ describe("Validation step tests", () => {
     await userEvent.click(switchFilters[1])
 
     const discardButton = screen.getByRole("button", {
-      name: "Discard selected rowsts",
+      name: "Discard selected rows",
     })
 
     await userEvent.click(discardButton)
@@ -364,7 +364,7 @@ describe("Validation step tests", () => {
     await userEvent.click(switchFilters[1])
 
     const discardButton = screen.getByRole("button", {
-      name: "Discard selected rowstsx",
+      name: "Discard selected rows",
     })
 
     await userEvent.click(discardButton)
