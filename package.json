@@ -1,6 +1,6 @@
 {
   "name": "subhasmitalmg-react-spreadsheet-import",
-  "version": "4.2.10",
+  "version": "4.2.11",
   "description": "React spreadsheet import for xlsx and csv files with column matching and validation steps",
   "main": "./dist-commonjs/index.js",
   "module": "./dist/index.js",
