@@ -40,7 +40,7 @@ export const translations = {
     nextButtonTitle: "Confirm",
     noRowsMessage: "No data found",
     noRowsMessageWhenFiltered: "No data containing errors",
-    discardButtonTitle: "Discard selected rows",
+    discardButtonTitle: "Discard selected rowsvvv",
     filterSwitchTitle: "Show only rows with errors",
   },
   alerts: {
