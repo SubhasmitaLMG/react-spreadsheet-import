@@ -38,7 +38,7 @@ const translations = {
         nextButtonTitle: "Confirm",
         noRowsMessage: "No data found",
         noRowsMessageWhenFiltered: "No data containing errors",
-        discardButtonTitle: "Discard selected rows",
+        discardButtonTitle: "Discard selected rowss",
         filterSwitchTitle: "Show only rows with errors",
     },
     alerts: {
@@ -54,6 +54,7 @@ const translations = {
             bodyTextSubmitForbidden: "There are still some rows containing errors.",
             cancelButtonTitle: "Cancel",
             finishButtonTitle: "Submit",
+            // downloadButtonTitle: "Download",
         },
         unmatchedRequiredFields: {
             headerTitle: "Not all columns matched",
