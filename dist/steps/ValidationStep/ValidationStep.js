@@ -9,7 +9,7 @@ import { Table } from '../../components/Table.js';
 import { SubmitDataAlert } from '../../components/Alerts/SubmitDataAlert.js';
 
 const ValidationStep = ({ initialData, file }) => {
-    const { translations, fields, onClose, onSubmit, rowHook, tableHook } = useRsi();
+    const { translations, fields, onClose, onSubmit, onDownload, rowHook, tableHook } = useRsi();
     const styles = useStyleConfig("ValidationStep");
     const [data, setData] = useState(useMemo(() => addErrorsAndRunHooks(initialData, fields, rowHook, tableHook), 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -68,6 +68,26 @@ const ValidationStep = ({ initialData, file }) => {
         setShowSubmitAlert(false);
         onClose();
     };
+    //SPO-3976 download csv
+    const downloadData = async () => {
+        const calculatedData = data.reduce((acc, value) => {
+            const { __index, __errors, ...values } = value;
+            if (__errors) {
+                for (const key in __errors) {
+                    if (__errors[key].level === "error") {
+                        acc.invalidData.push(values);
+                        return acc;
+                    }
+                }
+            }
+            acc.validData.push(values);
+            return acc;
+        }, { validData: [], invalidData: [], all: data });
+        onDownload(calculatedData, file);
+        setShowSubmitAlert(false);
+        onClose();
+    };
+    //SPO-3976 download csv
     const onContinue = () => {
         const invalidData = data.find((value) => {
             if (value?.__errors) {
@@ -82,7 +102,7 @@ const ValidationStep = ({ initialData, file }) => {
             setShowSubmitAlert(true);
         }
     };
-    return (jsxs(Fragment, { children: [jsx(SubmitDataAlert, { isOpen: showSubmitAlert, onClose: () => setShowSubmitAlert(false), onConfirm: submitData }), jsxs(ModalBody, { pb: 0, children: [jsxs(Box, { display: "flex", justifyContent: "space-between", alignItems: "center", mb: "2rem", flexWrap: "wrap", gap: "8px", children: [jsx(Heading, { sx: styles.heading, children: translations.validationStep.title }), jsxs(Box, { display: "flex", gap: "16px", alignItems: "center", flexWrap: "wrap", children: [jsx(Button, { variant: "outline", size: "sm", onClick: deleteSelectedRows, children: translations.validationStep.discardButtonTitle }), jsx(Switch, { display: "flex", alignItems: "center", isChecked: filterByErrors, onChange: () => setFilterByErrors(!filterByErrors), children: translations.validationStep.filterSwitchTitle })] })] }), jsx(Table, { rowKeyGetter: rowKeyGetter, rows: tableData, onRowsChange: updateRow, columns: columns, selectedRows: selectedRows, onSelectedRowsChange: setSelectedRows, components: {
+    return (jsxs(Fragment, { children: [jsx(SubmitDataAlert, { isOpen: showSubmitAlert, onClose: () => setShowSubmitAlert(false), onConfirm: submitData }), jsxs(ModalBody, { pb: 0, children: [jsxs(Box, { display: "flex", justifyContent: "space-between", alignItems: "center", mb: "2rem", flexWrap: "wrap", gap: "8px", children: [jsx(Heading, { sx: styles.heading, children: translations.validationStep.title }), jsxs(Box, { display: "flex", gap: "16px", alignItems: "center", flexWrap: "wrap", children: [jsx(Button, { variant: "outline", size: "sm", onClick: downloadData, children: translations.validationStep.downloadButtonTitle }), jsx(Button, { variant: "outline", size: "sm", onClick: deleteSelectedRows, children: translations.validationStep.discardButtonTitle }), jsx(Switch, { display: "flex", alignItems: "center", isChecked: filterByErrors, onChange: () => setFilterByErrors(!filterByErrors), children: translations.validationStep.filterSwitchTitle })] })] }), jsx(Table, { rowKeyGetter: rowKeyGetter, rows: tableData, onRowsChange: updateRow, columns: columns, selectedRows: selectedRows, onSelectedRowsChange: setSelectedRows, components: {
                             noRowsFallback: (jsx(Box, { display: "flex", justifyContent: "center", gridColumn: "1/-1", mt: "32px", children: filterByErrors
                                     ? translations.validationStep.noRowsMessageWhenFiltered
                                     : translations.validationStep.noRowsMessage })),

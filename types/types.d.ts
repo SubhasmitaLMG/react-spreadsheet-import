@@ -16,6 +16,7 @@ export type RsiProps<T extends string> = {
     rowHook?: RowHook<T>;
     tableHook?: TableHook<T>;
     onSubmit: (data: Result<T>, file: File) => void;
+    onDownload: (data: Result<T>, file: File) => void;
     allowInvalidSubmit?: boolean;
     translations?: TranslationsRSIProps;
     customTheme?: object;

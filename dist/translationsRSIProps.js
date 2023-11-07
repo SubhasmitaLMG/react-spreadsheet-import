@@ -40,6 +40,7 @@ const translations = {
         noRowsMessageWhenFiltered: "No data containing errors",
         discardButtonTitle: "Discard selected rows",
         filterSwitchTitle: "Show only rows with errors",
+        downloadButtonTitle: "Download", //SPO-3976 download csv
     },
     alerts: {
         confirmClose: {
@@ -54,7 +55,6 @@ const translations = {
             bodyTextSubmitForbidden: "There are still some rows containing errors.",
             cancelButtonTitle: "Cancel",
             finishButtonTitle: "Submit",
-            downloadButtonTitle: "Download",
         },
         unmatchedRequiredFields: {
             headerTitle: "Not all columns matched",

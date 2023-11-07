@@ -17,7 +17,7 @@ type Props<T extends string> = {
 }
 
 export const ValidationStep = <T extends string>({ initialData, file }: Props<T>) => {
-  const { translations, fields, onClose, onSubmit, rowHook, tableHook } = useRsi<T>()
+  const { translations, fields, onClose, onSubmit, onDownload, rowHook, tableHook } = useRsi<T>()
   const styles = useStyleConfig(
     "ValidationStep",
   ) as (typeof themeOverrides)["components"]["ValidationStep"]["baseStyle"]
@@ -99,6 +99,29 @@ export const ValidationStep = <T extends string>({ initialData, file }: Props<T>
     setShowSubmitAlert(false)
     onClose()
   }
+  //SPO-3976 download csv
+  const downloadData = async () => {
+    const calculatedData = data.reduce(
+      (acc, value) => {
+        const { __index, __errors, ...values } = value
+        if (__errors) {
+          for (const key in __errors) {
+            if (__errors[key].level === "error") {
+              acc.invalidData.push(values as unknown as Data<T>)
+              return acc
+            }
+          }
+        }
+        acc.validData.push(values as unknown as Data<T>)
+        return acc
+      },
+      { validData: [] as Data<T>[], invalidData: [] as Data<T>[], all: data },
+    )
+    onDownload(calculatedData, file)
+    setShowSubmitAlert(false)
+    onClose()
+  }
+  //SPO-3976 download csv
   const onContinue = () => {
     const invalidData = data.find((value) => {
       if (value?.__errors) {
@@ -120,6 +143,11 @@ export const ValidationStep = <T extends string>({ initialData, file }: Props<T>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb="2rem" flexWrap="wrap" gap="8px">
           <Heading sx={styles.heading}>{translations.validationStep.title}</Heading>
           <Box display="flex" gap="16px" alignItems="center" flexWrap="wrap">
+            {/* //SPO-3976 download csv */}
+            <Button variant="outline" size="sm" onClick={downloadData}>
+              {translations.validationStep.downloadButtonTitle}
+            </Button>
+            {/* //SPO-3976 download csv */}
             <Button variant="outline" size="sm" onClick={deleteSelectedRows}>
               {translations.validationStep.discardButtonTitle}
             </Button>

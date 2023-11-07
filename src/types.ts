@@ -23,6 +23,8 @@ export type RsiProps<T extends string> = {
   tableHook?: TableHook<T>
   // Function called after user finishes the flow
   onSubmit: (data: Result<T>, file: File) => void
+  //SPO-3976 download csv
+  onDownload: (data: Result<T>, file: File) => void
   // Allows submitting with errors. Default: true
   allowInvalidSubmit?: boolean
   // Translations for each text

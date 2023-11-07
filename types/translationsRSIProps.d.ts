@@ -41,6 +41,7 @@ export declare const translations: {
         noRowsMessageWhenFiltered: string;
         discardButtonTitle: string;
         filterSwitchTitle: string;
+        downloadButtonTitle: string;
     };
     alerts: {
         confirmClose: {
