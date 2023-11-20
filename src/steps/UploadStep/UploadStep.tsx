@@ -1,5 +1,5 @@
 import type XLSX from "xlsx-ugnis"
-import { Box, Heading, ModalBody, Text, useStyleConfig } from "@chakra-ui/react"
+import { Box, Heading, ModalBody, Text, useStyleConfig, Button } from "@chakra-ui/react"
 import { DropZone } from "./components/DropZone"
 import { useRsi } from "../../hooks/useRsi"
 import { ExampleTable } from "./components/ExampleTable"
@@ -14,7 +14,7 @@ type UploadProps = {
 export const UploadStep = ({ onContinue }: UploadProps) => {
   const [isLoading, setIsLoading] = useState(false)
   const styles = useStyleConfig("UploadStep") as (typeof themeOverrides)["components"]["UploadStep"]["baseStyle"]
-  const { translations, fields } = useRsi()
+  const { translations, fields, DownloadDbData } = useRsi() //SPO-3976
   const handleOnContinue = useCallback(
     async (data: XLSX.WorkBook, file: File) => {
       setIsLoading(true)
@@ -23,12 +23,22 @@ export const UploadStep = ({ onContinue }: UploadProps) => {
     },
     [onContinue],
   )
+  //SPO-3976
+  const downloaddbData = async () => {
+    DownloadDbData()
+  }
+  //SPO-3976
   return (
     <ModalBody>
       <Heading sx={styles.heading}>{translations.uploadStep.title}</Heading>
       <Text sx={styles.title}>{translations.uploadStep.manifestTitle}</Text>
       <Text sx={styles.subtitle}>{translations.uploadStep.manifestDescription}</Text>
       <Box sx={styles.tableWrapper}>
+        {/* //SPO-3976 */}
+        <Button onClick={downloaddbData} sx={styles.dropzoneButton}>
+          {translations.uploadStep.downloaddbdata}
+        </Button>
+        {/* //SPO-3976 */}
         <ExampleTable fields={fields} />
         <FadingOverlay />
       </Box>

@@ -32,6 +32,7 @@ export const ValidationStep = <T extends string>({ initialData, file }: Props<T>
   const [selectedRows, setSelectedRows] = useState<ReadonlySet<number | string>>(new Set())
   const [filterByErrors, setFilterByErrors] = useState(false)
   const [showSubmitAlert, setShowSubmitAlert] = useState(false)
+  // const [showNoofErrorAlert, setNoofErrorAlert] = useState(false)
 
   const updateData = useCallback(
     (rows: typeof data) => {
@@ -118,8 +119,8 @@ export const ValidationStep = <T extends string>({ initialData, file }: Props<T>
       { validData: [] as Data<T>[], invalidData: [] as Data<T>[], all: data },
     )
     onDownload(calculatedData, file)
-    setShowSubmitAlert(false)
-    onClose()
+    // setNoofErrorAlert(true)
+    // onClose()
   }
   //SPO-3976 download csv
   const onContinue = () => {
@@ -139,6 +140,7 @@ export const ValidationStep = <T extends string>({ initialData, file }: Props<T>
   return (
     <>
       <SubmitDataAlert isOpen={showSubmitAlert} onClose={() => setShowSubmitAlert(false)} onConfirm={submitData} />
+      {/* <SubmitDataAlert isOpen={showNoofErrorAlert} onClose={() => setNoofErrorAlert(false)} onConfirm={submitData} /> */}
       <ModalBody pb={0}>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb="2rem" flexWrap="wrap" gap="8px">
           <Heading sx={styles.heading}>{translations.validationStep.title}</Heading>

@@ -21,6 +21,7 @@ const ValidationStep = ({ initialData, file }) => {
     const [selectedRows, setSelectedRows] = react$1.useState(new Set());
     const [filterByErrors, setFilterByErrors] = react$1.useState(false);
     const [showSubmitAlert, setShowSubmitAlert] = react$1.useState(false);
+    // const [showNoofErrorAlert, setNoofErrorAlert] = useState(false)
     const updateData = react$1.useCallback((rows) => {
         setData(dataMutations.addErrorsAndRunHooks(rows, fields, rowHook, tableHook));
     }, [setData, rowHook, tableHook, fields]);
@@ -88,8 +89,8 @@ const ValidationStep = ({ initialData, file }) => {
             return acc;
         }, { validData: [], invalidData: [], all: data });
         onDownload(calculatedData, file);
-        setShowSubmitAlert(false);
-        onClose();
+        // setNoofErrorAlert(true)
+        // onClose()
     };
     //SPO-3976 download csv
     const onContinue = () => {

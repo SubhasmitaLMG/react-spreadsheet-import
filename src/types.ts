@@ -25,6 +25,8 @@ export type RsiProps<T extends string> = {
   onSubmit: (data: Result<T>, file: File) => void
   //SPO-3976 download csv
   onDownload: (data: Result<T>, file: File) => void
+  DownloadDbData: () => void
+  //SPO-3976 download csv
   // Allows submitting with errors. Default: true
   allowInvalidSubmit?: boolean
   // Translations for each text

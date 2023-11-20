@@ -4,6 +4,7 @@ export declare const translations: {
         title: string;
         manifestTitle: string;
         manifestDescription: string;
+        downloaddbdata: string;
         maxRecordsExceeded: (maxRecords: string) => string;
         dropzone: {
             title: string;
