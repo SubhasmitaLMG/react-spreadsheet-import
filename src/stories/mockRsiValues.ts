@@ -92,6 +92,7 @@ export const mockRsiValues = mockComponentBehaviourForTypes({
   },
   isOpen: true,
   onClose: () => {},
+  autoMapSelectValues: true,
   // uploadStepHook: async (data) => {
   //   await new Promise((resolve) => {
   //     setTimeout(() => resolve(data), 4000)

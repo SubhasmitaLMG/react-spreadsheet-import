@@ -41,7 +41,8 @@ const translations = {
         noRowsMessageWhenFiltered: "No data containing errors",
         discardButtonTitle: "Discard selected rows",
         filterSwitchTitle: "Show only rows with errors",
-        downloadButtonTitle: "Download", //SPO-3976 download csv
+        downloadButtonTitle: "Download",
+        noOfErrorRows: "Invalid lines", //SPO-3976 show no of error
     },
     alerts: {
         confirmClose: {

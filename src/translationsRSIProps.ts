@@ -44,6 +44,7 @@ export const translations = {
     discardButtonTitle: "Discard selected rows",
     filterSwitchTitle: "Show only rows with errors",
     downloadButtonTitle: "Download", //SPO-3976 download csv
+    noOfErrorRows: "Invalid lines", //SPO-3976 show no of error
   },
   alerts: {
     confirmClose: {

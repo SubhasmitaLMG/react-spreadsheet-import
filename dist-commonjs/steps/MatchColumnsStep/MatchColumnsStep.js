@@ -29,7 +29,7 @@ exports.ColumnType = void 0;
 const MatchColumnsStep = ({ data, headerValues, onContinue }) => {
     const toast = react.useToast();
     const dataExample = data.slice(0, 2);
-    const { fields, autoMapHeaders, autoMapDistance, translations } = useRsi.useRsi();
+    const { fields, autoMapHeaders, autoMapSelectValues, autoMapDistance, translations } = useRsi.useRsi();
     const [isLoading, setIsLoading] = react$1.useState(false);
     const [columns, setColumns] = react$1.useState(
     // Do not remove spread, it indexes empty array elements, otherwise map() skips over them
@@ -41,7 +41,7 @@ const MatchColumnsStep = ({ data, headerValues, onContinue }) => {
         setColumns(columns.map((column, index) => {
             columnIndex === index ? setColumn.setColumn(column, field, data) : column;
             if (columnIndex === index) {
-                return setColumn.setColumn(column, field, data);
+                return setColumn.setColumn(column, field, data, autoMapSelectValues);
             }
             else if (index === existingFieldIndex) {
                 toast({
@@ -59,6 +59,7 @@ const MatchColumnsStep = ({ data, headerValues, onContinue }) => {
             }
         }));
     }, [
+        autoMapSelectValues,
         columns,
         data,
         fields,
@@ -94,7 +95,7 @@ const MatchColumnsStep = ({ data, headerValues, onContinue }) => {
     }, [onContinue, columns, data, fields]);
     react$1.useEffect(() => {
         if (autoMapHeaders) {
-            setColumns(getMatchedColumns.getMatchedColumns(columns, fields, data, autoMapDistance));
+            setColumns(getMatchedColumns.getMatchedColumns(columns, fields, data, autoMapDistance, autoMapSelectValues));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

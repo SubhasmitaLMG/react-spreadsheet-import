@@ -1,5 +1,5 @@
-import { useCallback, useMemo, useState } from "react"
-import { Box, Button, Heading, ModalBody, Switch, useStyleConfig } from "@chakra-ui/react"
+import { useCallback, useMemo, useState, useEffect } from "react"
+import { Box, Button, Heading, ModalBody, Switch, useStyleConfig, Input } from "@chakra-ui/react"
 import { ContinueButton } from "../../components/ContinueButton"
 import { useRsi } from "../../hooks/useRsi"
 import type { Meta } from "./types"
@@ -114,6 +114,7 @@ export const ValidationStep = <T extends string>({ initialData, file }: Props<T>
           }
         }
         acc.validData.push(values as unknown as Data<T>)
+        console.log(acc.invalidData.length)
         return acc
       },
       { validData: [] as Data<T>[], invalidData: [] as Data<T>[], all: data },
@@ -137,6 +138,35 @@ export const ValidationStep = <T extends string>({ initialData, file }: Props<T>
     }
   }
 
+  const [noOfErrors, setNoOfErrors] = useState(0)
+  const [noOfAllRows, setAllRows] = useState(0)
+
+  const updateNoOfErrors = () => {
+    const calculatedData = data.reduce(
+      (acc, value) => {
+        const { __index, __errors, ...values } = value
+        if (__errors) {
+          for (const key in __errors) {
+            if (__errors[key].level === "error") {
+              acc.invalidData.push(values as unknown as Data<T>)
+              return acc
+            }
+          }
+        }
+        acc.validData.push(values as unknown as Data<T>)
+        console.log(acc.invalidData.length)
+        return acc
+      },
+      { validData: [] as Data<T>[], invalidData: [] as Data<T>[], all: data },
+    )
+    setNoOfErrors(calculatedData.invalidData.length)
+    setAllRows(calculatedData.all.length)
+  }
+
+  useEffect(() => {
+    updateNoOfErrors()
+  })
+
   return (
     <>
       <SubmitDataAlert isOpen={showSubmitAlert} onClose={() => setShowSubmitAlert(false)} onConfirm={submitData} />
@@ -145,10 +175,31 @@ export const ValidationStep = <T extends string>({ initialData, file }: Props<T>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb="2rem" flexWrap="wrap" gap="8px">
           <Heading sx={styles.heading}>{translations.validationStep.title}</Heading>
           <Box display="flex" gap="16px" alignItems="center" flexWrap="wrap">
+            {/* //SPO-3976 show no of error */}
+            {/* <Box>
+              <Box as="span" color={noOfErrors > 0 ? "red" : "inherit"}>
+                {`${noOfErrors}`.trim()}
+              </Box>
+              /{`${noOfAllRows}`} {`${translations.validationStep.noOfErrorRows}`}.
+              <Button variant="outline" size="sm" onClick={downloadData}>
+                {translations.validationStep.downloadButtonTitle}
+              </Button>
+            </Box> */}
             {/* //SPO-3976 download csv */}
-            <Button variant="outline" size="sm" onClick={downloadData}>
-              {translations.validationStep.downloadButtonTitle}
-            </Button>
+            {/* //SPO-3976 download csv */}
+            {noOfErrors > 0 && (
+              <Box>
+                {/* //SPO-3976 show no of error */}
+                <Box as="span" color="red">
+                  {`${noOfErrors}`.trim()}
+                </Box>
+                /{`${noOfAllRows}`} {`${translations.validationStep.noOfErrorRows}`}
+                {/* //SPO-3976 show no of error */}{" "}
+                <Button variant="outline" size="sm" onClick={downloadData}>
+                  {translations.validationStep.downloadButtonTitle}
+                </Button>
+              </Box>
+            )}
             {/* //SPO-3976 download csv */}
             <Button variant="outline" size="sm" onClick={deleteSelectedRows}>
               {translations.validationStep.discardButtonTitle}

@@ -86,6 +86,7 @@ const ValidationStep = ({ initialData, file }) => {
                 }
             }
             acc.validData.push(values);
+            console.log(acc.invalidData.length);
             return acc;
         }, { validData: [], invalidData: [], all: data });
         onDownload(calculatedData, file);
@@ -107,7 +108,30 @@ const ValidationStep = ({ initialData, file }) => {
             setShowSubmitAlert(true);
         }
     };
-    return (jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [jsxRuntime.jsx(SubmitDataAlert.SubmitDataAlert, { isOpen: showSubmitAlert, onClose: () => setShowSubmitAlert(false), onConfirm: submitData }), jsxRuntime.jsxs(react.ModalBody, { pb: 0, children: [jsxRuntime.jsxs(react.Box, { display: "flex", justifyContent: "space-between", alignItems: "center", mb: "2rem", flexWrap: "wrap", gap: "8px", children: [jsxRuntime.jsx(react.Heading, { sx: styles.heading, children: translations.validationStep.title }), jsxRuntime.jsxs(react.Box, { display: "flex", gap: "16px", alignItems: "center", flexWrap: "wrap", children: [jsxRuntime.jsx(react.Button, { variant: "outline", size: "sm", onClick: downloadData, children: translations.validationStep.downloadButtonTitle }), jsxRuntime.jsx(react.Button, { variant: "outline", size: "sm", onClick: deleteSelectedRows, children: translations.validationStep.discardButtonTitle }), jsxRuntime.jsx(react.Switch, { display: "flex", alignItems: "center", isChecked: filterByErrors, onChange: () => setFilterByErrors(!filterByErrors), children: translations.validationStep.filterSwitchTitle })] })] }), jsxRuntime.jsx(Table.Table, { rowKeyGetter: rowKeyGetter, rows: tableData, onRowsChange: updateRow, columns: columns$1, selectedRows: selectedRows, onSelectedRowsChange: setSelectedRows, components: {
+    const [noOfErrors, setNoOfErrors] = react$1.useState(0);
+    const [noOfAllRows, setAllRows] = react$1.useState(0);
+    const updateNoOfErrors = () => {
+        const calculatedData = data.reduce((acc, value) => {
+            const { __index, __errors, ...values } = value;
+            if (__errors) {
+                for (const key in __errors) {
+                    if (__errors[key].level === "error") {
+                        acc.invalidData.push(values);
+                        return acc;
+                    }
+                }
+            }
+            acc.validData.push(values);
+            console.log(acc.invalidData.length);
+            return acc;
+        }, { validData: [], invalidData: [], all: data });
+        setNoOfErrors(calculatedData.invalidData.length);
+        setAllRows(calculatedData.all.length);
+    };
+    react$1.useEffect(() => {
+        updateNoOfErrors();
+    });
+    return (jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [jsxRuntime.jsx(SubmitDataAlert.SubmitDataAlert, { isOpen: showSubmitAlert, onClose: () => setShowSubmitAlert(false), onConfirm: submitData }), jsxRuntime.jsxs(react.ModalBody, { pb: 0, children: [jsxRuntime.jsxs(react.Box, { display: "flex", justifyContent: "space-between", alignItems: "center", mb: "2rem", flexWrap: "wrap", gap: "8px", children: [jsxRuntime.jsx(react.Heading, { sx: styles.heading, children: translations.validationStep.title }), jsxRuntime.jsxs(react.Box, { display: "flex", gap: "16px", alignItems: "center", flexWrap: "wrap", children: [noOfErrors > 0 && (jsxRuntime.jsxs(react.Box, { children: [jsxRuntime.jsx(react.Box, { as: "span", color: "red", children: `${noOfErrors}`.trim() }), "/", `${noOfAllRows}`, " ", `${translations.validationStep.noOfErrorRows}`, " ", jsxRuntime.jsx(react.Button, { variant: "outline", size: "sm", onClick: downloadData, children: translations.validationStep.downloadButtonTitle })] })), jsxRuntime.jsx(react.Button, { variant: "outline", size: "sm", onClick: deleteSelectedRows, children: translations.validationStep.discardButtonTitle }), jsxRuntime.jsx(react.Switch, { display: "flex", alignItems: "center", isChecked: filterByErrors, onChange: () => setFilterByErrors(!filterByErrors), children: translations.validationStep.filterSwitchTitle })] })] }), jsxRuntime.jsx(Table.Table, { rowKeyGetter: rowKeyGetter, rows: tableData, onRowsChange: updateRow, columns: columns$1, selectedRows: selectedRows, onSelectedRowsChange: setSelectedRows, components: {
                             noRowsFallback: (jsxRuntime.jsx(react.Box, { display: "flex", justifyContent: "center", gridColumn: "1/-1", mt: "32px", children: filterByErrors
                                     ? translations.validationStep.noRowsMessageWhenFiltered
                                     : translations.validationStep.noRowsMessage })),

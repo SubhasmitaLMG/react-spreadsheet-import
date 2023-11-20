@@ -43,6 +43,7 @@ export declare const translations: {
         discardButtonTitle: string;
         filterSwitchTitle: string;
         downloadButtonTitle: string;
+        noOfErrorRows: string;
     };
     alerts: {
         confirmClose: {
