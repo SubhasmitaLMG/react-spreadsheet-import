@@ -7,9 +7,11 @@ import { addErrorsAndRunHooks } from './utils/dataMutations.js';
 import { generateColumns } from './components/columns.js';
 import { Table } from '../../components/Table.js';
 import { SubmitDataAlert } from '../../components/Alerts/SubmitDataAlert.js';
+import { SubmitSuccessAlert } from '../../components/Alerts/SubmitSuccessAlert.js';
+import { NoDataPresentAlert } from '../../components/Alerts/NoDataPresentAlert.js';
 
 const ValidationStep = ({ initialData, file }) => {
-    const { translations, fields, onClose, onSubmit, onDownload, rowHook, tableHook } = useRsi();
+    const { translations, fields, onClose, onSubmit, onDownload, rowHook, tableHook } = useRsi(); //SPO-4200
     const styles = useStyleConfig("ValidationStep");
     const [data, setData] = useState(useMemo(() => addErrorsAndRunHooks(initialData, fields, rowHook, tableHook), 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -17,6 +19,8 @@ const ValidationStep = ({ initialData, file }) => {
     const [selectedRows, setSelectedRows] = useState(new Set());
     const [filterByErrors, setFilterByErrors] = useState(false);
     const [showSubmitAlert, setShowSubmitAlert] = useState(false);
+    const [showSuccessSubmitAlert, setSuccessShowSubmitAlert] = useState(false); //SPO-4200
+    const [showNoDataPresentAlert, setNoDataPresentAlert] = useState(false); //SPO-4200
     // const [showNoofErrorAlert, setNoofErrorAlert] = useState(false)
     const updateData = useCallback((rows) => {
         setData(addErrorsAndRunHooks(rows, fields, rowHook, tableHook));
@@ -67,8 +71,17 @@ const ValidationStep = ({ initialData, file }) => {
         }, { validData: [], invalidData: [], all: data });
         onSubmit(calculatedData, file);
         setShowSubmitAlert(false);
-        onClose();
+        setSuccessShowSubmitAlert(true); //SPO-4200
+        setTimeout(() => {
+            onClose();
+        }, 10000);
     };
+    //SPO-4200
+    // const onClose = async () => {
+    //   setSuccessShowSubmitAlert(true)
+    //   console.log("hiting")
+    // }
+    //SPO-4200
     //SPO-3976 download csv
     const downloadData = async () => {
         const calculatedData = data.reduce((acc, value) => {
@@ -82,7 +95,7 @@ const ValidationStep = ({ initialData, file }) => {
                 }
             }
             acc.validData.push(values);
-            console.log(acc.invalidData.length);
+            // console.log(acc.invalidData.length)
             return acc;
         }, { validData: [], invalidData: [], all: data });
         onDownload(calculatedData, file);
@@ -97,8 +110,12 @@ const ValidationStep = ({ initialData, file }) => {
             }
             return false;
         });
+        const validData = data.filter((value) => !value?.__errors).length;
         if (!invalidData) {
             submitData();
+        }
+        else if (!validData) {
+            setNoDataPresentAlert(true); //SPO-4200
         }
         else {
             setShowSubmitAlert(true);
@@ -118,7 +135,7 @@ const ValidationStep = ({ initialData, file }) => {
                 }
             }
             acc.validData.push(values);
-            console.log(acc.invalidData.length);
+            // console.log(acc.invalidData.length)
             return acc;
         }, { validData: [], invalidData: [], all: data });
         setNoOfErrors(calculatedData.invalidData.length);
@@ -127,7 +144,7 @@ const ValidationStep = ({ initialData, file }) => {
     useEffect(() => {
         updateNoOfErrors();
     });
-    return (jsxs(Fragment, { children: [jsx(SubmitDataAlert, { isOpen: showSubmitAlert, onClose: () => setShowSubmitAlert(false), onConfirm: submitData }), jsxs(ModalBody, { pb: 0, children: [jsxs(Box, { display: "flex", justifyContent: "space-between", alignItems: "center", mb: "2rem", flexWrap: "wrap", gap: "8px", children: [jsx(Heading, { sx: styles.heading, children: translations.validationStep.title }), jsxs(Box, { display: "flex", gap: "16px", alignItems: "center", flexWrap: "wrap", children: [noOfErrors > 0 && (jsxs(Box, { children: [jsx(Box, { as: "span", color: "red", children: `${noOfErrors}`.trim() }), "/", `${noOfAllRows}`, " ", `${translations.validationStep.noOfErrorRows}`, " ", jsx(Button, { variant: "outline", size: "sm", onClick: downloadData, children: translations.validationStep.downloadButtonTitle })] })), jsx(Button, { variant: "outline", size: "sm", onClick: deleteSelectedRows, children: translations.validationStep.discardButtonTitle }), jsx(Switch, { display: "flex", alignItems: "center", isChecked: filterByErrors, onChange: () => setFilterByErrors(!filterByErrors), children: translations.validationStep.filterSwitchTitle })] })] }), jsx(Table, { rowKeyGetter: rowKeyGetter, rows: tableData, onRowsChange: updateRow, columns: columns, selectedRows: selectedRows, onSelectedRowsChange: setSelectedRows, components: {
+    return (jsxs(Fragment, { children: [jsx(SubmitDataAlert, { isOpen: showSubmitAlert, onClose: () => setShowSubmitAlert(false), onConfirm: submitData }), jsx(SubmitSuccessAlert, { isOpen: showSuccessSubmitAlert, onClose: () => setSuccessShowSubmitAlert(false) }), jsx(NoDataPresentAlert, { isOpen: showNoDataPresentAlert, onClose: () => setNoDataPresentAlert(false) }), jsxs(ModalBody, { pb: 0, children: [jsxs(Box, { display: "flex", justifyContent: "space-between", alignItems: "center", mb: "2rem", flexWrap: "wrap", gap: "8px", children: [jsx(Heading, { sx: styles.heading, children: translations.validationStep.title }), jsxs(Box, { display: "flex", gap: "16px", alignItems: "center", flexWrap: "wrap", children: [noOfErrors > 0 && (jsxs(Box, { children: [jsx(Box, { as: "span", color: "red", children: `${noOfErrors}`.trim() }), "/", `${noOfAllRows}`, " ", `${translations.validationStep.noOfErrorRows}`, " ", jsx(Button, { variant: "outline", size: "sm", onClick: downloadData, children: translations.validationStep.downloadButtonTitle })] })), jsx(Button, { variant: "outline", size: "sm", onClick: deleteSelectedRows, children: translations.validationStep.discardButtonTitle }), jsx(Switch, { display: "flex", alignItems: "center", isChecked: filterByErrors, onChange: () => setFilterByErrors(!filterByErrors), children: translations.validationStep.filterSwitchTitle })] })] }), jsx(Table, { rowKeyGetter: rowKeyGetter, rows: tableData, onRowsChange: updateRow, columns: columns, selectedRows: selectedRows, onSelectedRowsChange: setSelectedRows, components: {
                             noRowsFallback: (jsx(Box, { display: "flex", justifyContent: "center", gridColumn: "1/-1", mt: "32px", children: filterByErrors
                                     ? translations.validationStep.noRowsMessageWhenFiltered
                                     : translations.validationStep.noRowsMessage })),

@@ -66,6 +66,14 @@ export declare const translations: {
             cancelButtonTitle: string;
             continueButtonTitle: string;
         };
+        submitSuccess: {
+            headerTitle: string;
+            successMessage: string;
+        };
+        noValidDataFound: {
+            headerTitle: string;
+            successMessage: string;
+        };
         toast: {
             error: string;
         };

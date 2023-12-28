@@ -67,6 +67,16 @@ export const translations = {
       cancelButtonTitle: "Cancel",
       continueButtonTitle: "Continue",
     },
+    //SPO-4200
+    submitSuccess: {
+      headerTitle: "Successful",
+      successMessage: "File submission is done, check the result in History page.",
+    },
+    noValidDataFound: {
+      headerTitle: "Unable to Submit",
+      successMessage: "No Valid Data Found.",
+    },
+    //SPO-4200
     toast: {
       error: "Error",
     },

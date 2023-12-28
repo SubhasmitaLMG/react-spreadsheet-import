@@ -10,6 +10,8 @@ import { SubmitDataAlert } from "../../components/Alerts/SubmitDataAlert"
 import type { Data } from "../../types"
 import type { themeOverrides } from "../../theme"
 import type { RowsChangeData } from "react-data-grid"
+import { SubmitSuccessAlert } from "../../components/Alerts/SubmitSuccessAlert" //SPO-4200
+import { NoDataPresentAlert } from "../../components/Alerts/NoDataPresentAlert" //SPO-4200
 
 type Props<T extends string> = {
   initialData: Data<T>[]
@@ -17,7 +19,7 @@ type Props<T extends string> = {
 }
 
 export const ValidationStep = <T extends string>({ initialData, file }: Props<T>) => {
-  const { translations, fields, onClose, onSubmit, onDownload, rowHook, tableHook } = useRsi<T>()
+  const { translations, fields, onClose, onSubmit, onDownload, rowHook, tableHook } = useRsi<T>() //SPO-4200
   const styles = useStyleConfig(
     "ValidationStep",
   ) as (typeof themeOverrides)["components"]["ValidationStep"]["baseStyle"]
@@ -32,6 +34,8 @@ export const ValidationStep = <T extends string>({ initialData, file }: Props<T>
   const [selectedRows, setSelectedRows] = useState<ReadonlySet<number | string>>(new Set())
   const [filterByErrors, setFilterByErrors] = useState(false)
   const [showSubmitAlert, setShowSubmitAlert] = useState(false)
+  const [showSuccessSubmitAlert, setSuccessShowSubmitAlert] = useState(false) //SPO-4200
+  const [showNoDataPresentAlert, setNoDataPresentAlert] = useState(false) //SPO-4200
   // const [showNoofErrorAlert, setNoofErrorAlert] = useState(false)
 
   const updateData = useCallback(
@@ -98,8 +102,17 @@ export const ValidationStep = <T extends string>({ initialData, file }: Props<T>
     )
     onSubmit(calculatedData, file)
     setShowSubmitAlert(false)
-    onClose()
+    setSuccessShowSubmitAlert(true) //SPO-4200
+    setTimeout(() => {
+      onClose()
+    }, 10000)
   }
+  //SPO-4200
+  // const onClose = async () => {
+  //   setSuccessShowSubmitAlert(true)
+  //   console.log("hiting")
+  // }
+  //SPO-4200
   //SPO-3976 download csv
   const downloadData = async () => {
     const calculatedData = data.reduce(
@@ -114,7 +127,7 @@ export const ValidationStep = <T extends string>({ initialData, file }: Props<T>
           }
         }
         acc.validData.push(values as unknown as Data<T>)
-        console.log(acc.invalidData.length)
+        // console.log(acc.invalidData.length)
         return acc
       },
       { validData: [] as Data<T>[], invalidData: [] as Data<T>[], all: data },
@@ -131,8 +144,11 @@ export const ValidationStep = <T extends string>({ initialData, file }: Props<T>
       }
       return false
     })
+    const validData = data.filter((value) => !value?.__errors).length
     if (!invalidData) {
       submitData()
+    } else if (!validData) {
+      setNoDataPresentAlert(true) //SPO-4200
     } else {
       setShowSubmitAlert(true)
     }
@@ -154,7 +170,7 @@ export const ValidationStep = <T extends string>({ initialData, file }: Props<T>
           }
         }
         acc.validData.push(values as unknown as Data<T>)
-        console.log(acc.invalidData.length)
+        // console.log(acc.invalidData.length)
         return acc
       },
       { validData: [] as Data<T>[], invalidData: [] as Data<T>[], all: data },
@@ -170,6 +186,9 @@ export const ValidationStep = <T extends string>({ initialData, file }: Props<T>
   return (
     <>
       <SubmitDataAlert isOpen={showSubmitAlert} onClose={() => setShowSubmitAlert(false)} onConfirm={submitData} />
+      {/* //SPO-4200 */}
+      <SubmitSuccessAlert isOpen={showSuccessSubmitAlert} onClose={() => setSuccessShowSubmitAlert(false)} />
+      <NoDataPresentAlert isOpen={showNoDataPresentAlert} onClose={() => setNoDataPresentAlert(false)} />
       {/* <SubmitDataAlert isOpen={showNoofErrorAlert} onClose={() => setNoofErrorAlert(false)} onConfirm={submitData} /> */}
       <ModalBody pb={0}>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb="2rem" flexWrap="wrap" gap="8px">
