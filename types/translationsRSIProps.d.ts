@@ -69,6 +69,7 @@ export declare const translations: {
         submitSuccess: {
             headerTitle: string;
             successMessage: string;
+            closeButtonTitle: string;
         };
         noValidDataFound: {
             headerTitle: string;

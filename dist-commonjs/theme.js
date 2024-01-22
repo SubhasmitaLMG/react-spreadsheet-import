@@ -424,7 +424,7 @@ const themeOverrides = {
                 },
             },
             ".rdg-cell-error": {
-                backgroundColor: "var(--rdg-error-cell-background-color)",
+                backgroundColor: "#F1ABB9",
             },
             ".rdg-cell-warning": {
                 backgroundColor: "var(--rdg-warning-cell-background-color)",

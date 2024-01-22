@@ -28,7 +28,11 @@ export const NoDataPresentAlert = ({ isOpen, onClose }: Props) => {
             {translations.alerts.noValidDataFound.headerTitle}
           </AlertDialogHeader>
           <AlertDialogBody>{translations.alerts.noValidDataFound.successMessage}</AlertDialogBody>
-          <AlertDialogFooter></AlertDialogFooter>
+          <AlertDialogFooter>
+            <Button ref={cancelRef} onClick={onClose} variant="secondary">
+              {translations.alerts.submitIncomplete.cancelButtonTitle}
+            </Button>
+          </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialogOverlay>
     </AlertDialog>

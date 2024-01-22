@@ -13,6 +13,7 @@ type UploadProps = {
 
 export const UploadStep = ({ onContinue }: UploadProps) => {
   const [isLoading, setIsLoading] = useState(false)
+  const [downloadLoading, setDownloadLoading] = useState(false)
   const styles = useStyleConfig("UploadStep") as (typeof themeOverrides)["components"]["UploadStep"]["baseStyle"]
   const { translations, fields, DownloadDbData } = useRsi() //SPO-3976
   const handleOnContinue = useCallback(
@@ -25,7 +26,13 @@ export const UploadStep = ({ onContinue }: UploadProps) => {
   )
   //SPO-3976
   const downloaddbData = async () => {
-    DownloadDbData()
+    try {
+      setDownloadLoading(true)
+      await DownloadDbData()
+    } finally {
+      setDownloadLoading(false)
+    }
+    // DownloadDbData()
   }
   //SPO-3976
   return (
@@ -35,7 +42,7 @@ export const UploadStep = ({ onContinue }: UploadProps) => {
       <Text sx={styles.subtitle}>{translations.uploadStep.manifestDescription}</Text>
       <Box sx={styles.tableWrapper}>
         {/* //SPO-3976 */}
-        <Button onClick={downloaddbData} sx={styles.dropzoneButton}>
+        <Button onClick={downloaddbData} sx={styles.dropzoneButton} isLoading={downloadLoading}>
           {translations.uploadStep.downloaddbdata}
         </Button>
         {/* //SPO-3976 */}

@@ -28,7 +28,11 @@ export const SubmitSuccessAlert = ({ isOpen, onClose }: Props) => {
             {translations.alerts.submitSuccess.headerTitle}
           </AlertDialogHeader>
           <AlertDialogBody>{translations.alerts.submitSuccess.successMessage}</AlertDialogBody>
-          <AlertDialogFooter></AlertDialogFooter>
+          <AlertDialogFooter>
+            <Button ref={cancelRef} onClick={onClose} variant="secondary">
+              {translations.alerts.submitSuccess.closeButtonTitle}
+            </Button>
+          </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialogOverlay>
     </AlertDialog>

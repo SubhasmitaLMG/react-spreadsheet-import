@@ -71,6 +71,7 @@ export const translations = {
     submitSuccess: {
       headerTitle: "Successful",
       successMessage: "File submission is done, check the result in History page.",
+      closeButtonTitle: "Close",
     },
     noValidDataFound: {
       headerTitle: "Unable to Submit",

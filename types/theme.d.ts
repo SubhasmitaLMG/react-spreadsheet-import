@@ -294,7 +294,7 @@ export declare const themeOverrides: {
                 };
             };
             readonly ".rdg-cell-error": {
-                readonly backgroundColor: "var(--rdg-error-cell-background-color)";
+                readonly backgroundColor: "#F1ABB9";
             };
             readonly ".rdg-cell-warning": {
                 readonly backgroundColor: "var(--rdg-warning-cell-background-color)";

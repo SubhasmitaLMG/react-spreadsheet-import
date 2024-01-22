@@ -8,6 +8,7 @@ import { FadingOverlay } from './components/FadingOverlay.js';
 
 const UploadStep = ({ onContinue }) => {
     const [isLoading, setIsLoading] = useState(false);
+    const [downloadLoading, setDownloadLoading] = useState(false);
     const styles = useStyleConfig("UploadStep");
     const { translations, fields, DownloadDbData } = useRsi(); //SPO-3976
     const handleOnContinue = useCallback(async (data, file) => {
@@ -17,10 +18,17 @@ const UploadStep = ({ onContinue }) => {
     }, [onContinue]);
     //SPO-3976
     const downloaddbData = async () => {
-        DownloadDbData();
+        try {
+            setDownloadLoading(true);
+            await DownloadDbData();
+        }
+        finally {
+            setDownloadLoading(false);
+        }
+        // DownloadDbData()
     };
     //SPO-3976
-    return (jsxs(ModalBody, { children: [jsx(Heading, { sx: styles.heading, children: translations.uploadStep.title }), jsx(Text, { sx: styles.title, children: translations.uploadStep.manifestTitle }), jsx(Text, { sx: styles.subtitle, children: translations.uploadStep.manifestDescription }), jsxs(Box, { sx: styles.tableWrapper, children: [jsx(Button, { onClick: downloaddbData, sx: styles.dropzoneButton, children: translations.uploadStep.downloaddbdata }), jsx(ExampleTable, { fields: fields }), jsx(FadingOverlay, {})] }), jsx(DropZone, { onContinue: handleOnContinue, isLoading: isLoading })] }));
+    return (jsxs(ModalBody, { children: [jsx(Heading, { sx: styles.heading, children: translations.uploadStep.title }), jsx(Text, { sx: styles.title, children: translations.uploadStep.manifestTitle }), jsx(Text, { sx: styles.subtitle, children: translations.uploadStep.manifestDescription }), jsxs(Box, { sx: styles.tableWrapper, children: [jsx(Button, { onClick: downloaddbData, sx: styles.dropzoneButton, isLoading: downloadLoading, children: translations.uploadStep.downloaddbdata }), jsx(ExampleTable, { fields: fields }), jsx(FadingOverlay, {})] }), jsx(DropZone, { onContinue: handleOnContinue, isLoading: isLoading })] }));
 };
 
 export { UploadStep };
